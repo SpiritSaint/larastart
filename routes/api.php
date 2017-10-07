@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Http\Requests;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,29 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('signup', function (Request $request) {
-    $user = User::create([
-        'name' => $request->input('name'),
-        'email' => $request->input('email'),
-        'password' => bcrypt($request->input('password')),
-        'is_admin' => false,
-    ]);
-    return response()->json([
-        'status' => 'success',
-        'user' => $user,
-    ]);
-});
+Route::post('signup', 'Api\AuthController@signup');
 
-Route::post('login', function (Request $request) {
-    if (Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
-        $user = User::where('email','=',$request->input('email'))->get();
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-        ]);
-    } else {
-        return response()->json([
-           'status' => 'error',
-        ]);
-    }
-});
+Route::post('login', 'Api\AuthController@login');
