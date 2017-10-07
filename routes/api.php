@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,17 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::post('signup', function (Request $request) {
+    $user = User::create([
+        'name' => $request->input('name'),
+        'email' => $request->input('email'),
+        'password' => bcrypt($request->input('password')),
+        'is_admin' => false,
+    ]);
+    return response()->json([
+        'status' => 'success',
+        'user' => $user,
+    ]);
 });
