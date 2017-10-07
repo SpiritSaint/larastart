@@ -30,3 +30,17 @@ Route::post('signup', function (Request $request) {
         'user' => $user,
     ]);
 });
+
+Route::post('login', function (Request $request) {
+    if (Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
+        $user = User::where('email','=',$request->input('email'))->get();
+        return response()->json([
+            'status' => 'success',
+            'user' => $user,
+        ]);
+    } else {
+        return response()->json([
+           'status' => 'error',
+        ]);
+    }
+});
